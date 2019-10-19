@@ -20,8 +20,8 @@ public class UsuarioUpdateDTO {
 	@Email(message = "{Email}")
 	private String email;
 
-	@NotBlank(message = "Password must be fill")
-	@Size(min = 6, max = 10, message = "Password must be between 6 and 10 character")
+	@NotBlank(message = "{senha.notblank}")
+	@Size(min = 6, max = 10, message = "{senha.size}")
 	private String senha;
 
 	public Usuario converterToUsuario(UsuarioUpdateDTO usuarioUpdateDTO) {
