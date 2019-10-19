@@ -1,5 +1,6 @@
 package br.com.maddytec.resource;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.maddytec.domain.Grupo;
 import br.com.maddytec.domain.Usuario;
 import br.com.maddytec.dto.UserUpdateRoleDTO;
 import br.com.maddytec.dto.UsuarioDTO;
@@ -34,6 +36,7 @@ import br.com.maddytec.dto.UsuarioUpdateDTO;
 import br.com.maddytec.model.PageModel;
 import br.com.maddytec.model.PageRequestModel;
 import br.com.maddytec.security.JwtManager;
+import br.com.maddytec.service.GrupoService;
 import br.com.maddytec.service.UsuarioService;
 
 @CrossOrigin(origins = "*")
@@ -43,6 +46,9 @@ public class UsuarioResource {
 
 	@Autowired
 	private UsuarioService usuarioService;
+	
+	@Autowired
+	private GrupoService grupoService;
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -50,10 +56,22 @@ public class UsuarioResource {
 	@Autowired
 	private JwtManager jwtManager;
 
-	@Secured({ "ROLE_ADMINISTRADOR" })
+	@Secured({ "ROLE_ADMINISTRADORES" })
 	@PostMapping
 	public ResponseEntity<Usuario> save(@RequestBody @Valid UsuarioDTO usuarioDTO) {
 
+		List<Grupo> gruposCadastrados = new ArrayList<>();
+		gruposCadastrados = grupoService.findAll();
+		
+		for (Grupo grupoDTO : usuarioDTO.getGrupos()) {
+			for (Grupo grupoCadastrado : gruposCadastrados) {
+				if(grupoDTO.getNome().equals(grupoCadastrado.getNome())) {
+					grupoDTO.setId(grupoCadastrado.getId());
+					grupoDTO.setDescricao(grupoCadastrado.getDescricao());
+				}
+			}
+		}
+		
 		Usuario usuario = usuarioService.save(usuarioDTO.converterToUser(usuarioDTO));
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
 	}
@@ -114,7 +132,7 @@ public class UsuarioResource {
 		return ResponseEntity.ok(usuarioLoginDTO);
 	}
 
-	@Secured({ "ROLE_ADMINISTRADOR" })
+	@Secured({ "ROLE_ADMINISTRADORES" })
 	@PatchMapping("/{id}")
 	public ResponseEntity<?> updateRole(@RequestBody @Valid UserUpdateRoleDTO userUpdateRoleDTO,
 			@PathVariable(name = "id") Long id) {
@@ -128,7 +146,7 @@ public class UsuarioResource {
 		return ResponseEntity.ok().build();
 	}
 	
-	@Secured({ "ROLE_ADMINISTRADOR" })
+	@Secured({ "ROLE_ADMINISTRADORES" })
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteById(@PathVariable(name = "id") Long id) {
 		usuarioService.deleteById(id);
