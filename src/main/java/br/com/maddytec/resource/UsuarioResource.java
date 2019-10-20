@@ -59,19 +59,6 @@ public class UsuarioResource {
 	@Secured({ "ROLE_ADMINISTRADORES" })
 	@PostMapping
 	public ResponseEntity<Usuario> save(@RequestBody @Valid UsuarioDTO usuarioDTO) {
-
-		List<Grupo> gruposCadastrados = new ArrayList<>();
-		gruposCadastrados = grupoService.findAll();
-		
-		for (Grupo grupoDTO : usuarioDTO.getGrupos()) {
-			for (Grupo grupoCadastrado : gruposCadastrados) {
-				if(grupoDTO.getNome().equals(grupoCadastrado.getNome())) {
-					grupoDTO.setId(grupoCadastrado.getId());
-					grupoDTO.setDescricao(grupoCadastrado.getDescricao());
-				}
-			}
-		}
-		
 		Usuario usuario = usuarioService.save(usuarioDTO.converterToUser(usuarioDTO));
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
 	}
