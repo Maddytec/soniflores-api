@@ -1,6 +1,5 @@
 package br.com.maddytec.resource;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.maddytec.domain.Grupo;
 import br.com.maddytec.domain.Usuario;
 import br.com.maddytec.dto.UserUpdateRoleDTO;
 import br.com.maddytec.dto.UsuarioDTO;
@@ -36,7 +34,6 @@ import br.com.maddytec.dto.UsuarioUpdateDTO;
 import br.com.maddytec.model.PageModel;
 import br.com.maddytec.model.PageRequestModel;
 import br.com.maddytec.security.JwtManager;
-import br.com.maddytec.service.GrupoService;
 import br.com.maddytec.service.UsuarioService;
 
 @CrossOrigin(origins = "*")
@@ -47,9 +44,6 @@ public class UsuarioResource {
 	@Autowired
 	private UsuarioService usuarioService;
 	
-	@Autowired
-	private GrupoService grupoService;
-
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
