@@ -57,7 +57,7 @@ public class UsuarioResource {
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
 	}
 
-	@PreAuthorize("@accessManager.isOwner(#id)")
+	//@PreAuthorize("@accessManager.isOwner(#id)")
 	@PutMapping("/{id}")
 	public ResponseEntity<Usuario> update(@PathVariable(name = "id") Long id,
 			@RequestBody @Valid UsuarioUpdateDTO usuarioUpdateDTO) {
