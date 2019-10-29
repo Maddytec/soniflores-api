@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import antlr.StringUtils;
 import br.com.maddytec.domain.Grupo;
 import br.com.maddytec.domain.Usuario;
 import br.com.maddytec.exception.NotFoundException;
