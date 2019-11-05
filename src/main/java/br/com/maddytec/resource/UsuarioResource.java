@@ -76,11 +76,11 @@ public class UsuarioResource {
 
 	@GetMapping
 	public ResponseEntity<List<Usuario>> findAll() {
-		List<Usuario> users = usuarioService.findAll();
-		return ResponseEntity.ok(users);
+		List<Usuario> usuarios = usuarioService.findAll();
+		return ResponseEntity.ok(usuarios);
 	}
 
-	@GetMapping("/v2") // Lazy loading
+	@GetMapping("/v2") // Lazy loading	
 	public ResponseEntity<PageModel<Usuario>> findAll(
 			@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "size", defaultValue = "10") int size) {
