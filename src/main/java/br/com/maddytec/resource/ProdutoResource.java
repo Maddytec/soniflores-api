@@ -1,5 +1,7 @@
 package br.com.maddytec.resource;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +33,7 @@ public class ProdutoResource {
 		return ResponseEntity.status(HttpStatus.CREATED).body(produto);
 	}
 	
-	@GetMapping
+	@GetMapping("/v2") // Lazy loading	
 	public ResponseEntity<PageModel<Produto>> findAllOnLazy(
 			@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "size", defaultValue = "5") int size) {
@@ -40,6 +42,12 @@ public class ProdutoResource {
 
 		PageModel<Produto> pageModel = produtoService.findAllOnLazy(pageRequestModel);
 		return ResponseEntity.ok(pageModel);
+	}
+	
+	@GetMapping
+	public ResponseEntity<List<Produto>> findAll() {
+		List<Produto> produtos = produtoService.findAll();
+		return ResponseEntity.ok(produtos);
 	}
 
 }

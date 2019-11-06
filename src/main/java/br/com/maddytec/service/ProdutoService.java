@@ -1,5 +1,7 @@
 package br.com.maddytec.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,5 +27,10 @@ public class ProdutoService {
 		Page<Produto> page = produtoRepository.findAll(pageable);
 
 		return new PageModel<>((int) page.getTotalElements(), page.getSize(), page.getTotalPages(), page.getContent());
+	}
+
+	public List<Produto> findAll() {
+		List<Produto> produtos = produtoRepository.findAll();
+		return produtos;
 	}
 }

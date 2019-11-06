@@ -53,8 +53,8 @@ public class UsuarioService implements UserDetailsService {
 	}
 
 	public List<Usuario> findAll() {
-		List<Usuario> Usuarios = usuarioRepository.findAll();
-		return Usuarios;
+		List<Usuario> usuarios = usuarioRepository.findAll();
+		return usuarios;
 	}
 
 	public PageModel<Usuario> findAllOnLazyMode(PageRequestModel pageRequestModel) {
