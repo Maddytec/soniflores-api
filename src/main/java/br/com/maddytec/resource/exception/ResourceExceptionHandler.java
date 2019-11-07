@@ -66,7 +66,13 @@ public class ResourceExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(ConstraintViolationException.class)
 	public ResponseEntity<ApiError> handlerSQLException(ConstraintViolationException ex) {
-		String defaultMessage = "Email já consta cadastrado";
+		String defaultMessage = "";
+		if(ex.getConstraintName() == null ) {
+			defaultMessage = "Alteração e/ou exclusão não permitida, devido a dependencias existentes.";
+		} else {
+			defaultMessage = "Cadastro realizado anteriormente.";
+		}
+		
 		List<String> errors = new ArrayList<>();
 		errors.add(defaultMessage);
 
