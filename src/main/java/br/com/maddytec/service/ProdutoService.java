@@ -33,4 +33,8 @@ public class ProdutoService {
 		List<Produto> produtos = produtoRepository.findAll();
 		return produtos;
 	}
+
+	public void deleteById(Long id) {
+		produtoRepository.deleteById(id);
+	}
 }
