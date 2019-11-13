@@ -9,9 +9,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.maddytec.domain.Categoria;
+import br.com.maddytec.domain.Produto;
 import lombok.Getter;
 import lombok.Setter;
-import br.com.maddytec.domain.Produto;
 
 @Getter
 @Setter
@@ -34,16 +34,21 @@ public class ProdutoDTO {
 	@NotNull(message = "{NotNull}")
 	private BigDecimal valorUnitario;
 
-	@NotNull(message = "{NotNull}")
-	private Categoria categoria;
+	@NotNull@NotNull(message = "{categoria.notNull}")
+	private CategoriaDTO categoria;
 
 	public Produto converterToProduto(ProdutoDTO produtoDTO) {
+		Categoria categoria = new Categoria();
+		if(produtoDTO.getCategoria() != null) {
+			categoria.setId(produtoDTO.getCategoria().getId());
+		}
+		
 		return Produto.builder()
 				.nome(produtoDTO.getNome())
 				.sku(produtoDTO.getSku())
 				.quantidadeEstoque(produtoDTO.getQuantidadeEstoque())
 				.valorUnitario(produtoDTO.getValorUnitario())
-				.categoria(produtoDTO.getCategoria())
+				.categoria(categoria)
 				.build();
 	}
 }
