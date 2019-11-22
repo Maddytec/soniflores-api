@@ -1,7 +1,5 @@
 package br.com.maddytec.dto;
 
-import java.util.List;
-
 import br.com.maddytec.domain.Categoria;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,14 +18,11 @@ public class CategoriaDTO {
 	
 	private CategoriaDTO categoriaPai;
 	
-	private List<CategoriaDTO> subcategorias;
-	
-	
-	public Categoria converterToProduto(CategoriaDTO categoriaDTO) {
-		
-		Categoria categoriaPai = new Categoria();
+	public Categoria converterToCategoria(CategoriaDTO categoriaDTO) {
+		Categoria categoriaPai = null;
 		
 		if(categoriaDTO.getCategoriaPai() != null ) {
+			categoriaPai = new Categoria();
 			categoriaPai.setId(categoriaDTO.getCategoriaPai().getId());
 		}
 		

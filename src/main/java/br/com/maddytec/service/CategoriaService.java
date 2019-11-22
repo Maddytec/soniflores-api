@@ -20,16 +20,20 @@ public class CategoriaService {
 	@Autowired
 	private CategoriaRepository categoriaRepository;
 
+	public Categoria save(Categoria categoria) {
+		return categoriaRepository.save(categoria);
+	}
+
 	public Categoria findById(Long id) {
 		Optional<Categoria> optional = categoriaRepository.findById(id);
 		return optional.orElseThrow(() -> new NotFoundException("Não existe categoria com id: " + id));
 	}
 
 	public List<Categoria> findAll() {
-		List<Categoria> categoiras = categoriaRepository.findAll();
-		return categoiras;
+		List<Categoria> categorias = categoriaRepository.findAll();
+		return categorias;
 	}
-	
+
 	public PageModel<Categoria> findAllOnLazyMode(PageRequestModel pageRequestModel) {
 		PageRequest pageable = PageRequest.of(pageRequestModel.getPage(), pageRequestModel.getSize());
 		Page<Categoria> page = categoriaRepository.findAll(pageable);
