@@ -34,7 +34,7 @@ public class ProdutoResource {
 	ProdutoService produtoService;
 
 	@PostMapping
-	public ResponseEntity<Produto> save(ProdutoDTO produtoDTO) {
+	public ResponseEntity<Produto> save(@RequestBody @Valid ProdutoDTO produtoDTO) {
 		Produto produto = produtoDTO.converterToProduto(produtoDTO);
 		produto = produtoService.save(produto);
 		return ResponseEntity.status(HttpStatus.CREATED).body(produto);
@@ -63,6 +63,12 @@ public class ProdutoResource {
 	public ResponseEntity<List<Produto>> findAll() {
 		List<Produto> produtos = produtoService.findAll();
 		return ResponseEntity.ok(produtos);
+	}
+	
+	@GetMapping("/{sku}")
+	public ResponseEntity<Produto> findBySku(@PathVariable(name = "sku") String sku) {
+		Produto produto = produtoService.findBySku(sku);
+		return ResponseEntity.ok().body(produto);
 	}
 
 	@Secured({ "ROLE_ADMINISTRADORES" })

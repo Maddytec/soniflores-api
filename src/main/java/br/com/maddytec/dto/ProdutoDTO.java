@@ -34,12 +34,13 @@ public class ProdutoDTO {
 	@NotNull(message = "{NotNull}")
 	private BigDecimal valorUnitario;
 
-	@NotNull@NotNull(message = "{categoria.notNull}")
+	@NotNull(message = "{categoria.notNull}")
 	private CategoriaDTO categoria;
 
 	public Produto converterToProduto(ProdutoDTO produtoDTO) {
-		Categoria categoria = new Categoria();
+		Categoria categoria = null;
 		if(produtoDTO.getCategoria() != null) {
+			categoria = new Categoria();
 			categoria.setId(produtoDTO.getCategoria().getId());
 		}
 		

@@ -1,6 +1,7 @@
 package br.com.maddytec.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,5 +37,10 @@ public class ProdutoService {
 
 	public void deleteById(Long id) {
 		produtoRepository.deleteById(id);
+	}
+	
+	public Produto findBySku(String sku) {
+		Optional<Produto> optional = produtoRepository.findBySku(sku);
+		return optional.orElse(null);
 	}
 }
