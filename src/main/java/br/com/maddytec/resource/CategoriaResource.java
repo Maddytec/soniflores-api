@@ -7,20 +7,23 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.maddytec.domain.Categoria;
+import br.com.maddytec.dto.CategoriaDTO;
 import br.com.maddytec.model.PageModel;
 import br.com.maddytec.model.PageRequestModel;
 import br.com.maddytec.service.CategoriaService;
-import br.com.maddytec.dto.CategoriaDTO;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -35,6 +38,15 @@ public class CategoriaResource {
 		Categoria categoria = categoriaDTO.converterToCategoria(categoriaDTO);
 		categoria = categoriaService.save(categoria);
 		return ResponseEntity.status(HttpStatus.CREATED).body(categoria);
+	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<Categoria> update(@PathVariable(name = "id") Long id,
+			@RequestBody @Valid CategoriaDTO categoriaDTO) {
+		Categoria categoria = categoriaDTO.converterToCategoria(categoriaDTO);
+		categoria.setId(id);
+		categoria = categoriaService.save(categoria);
+		return ResponseEntity.status(HttpStatus.OK).body(categoria);
 	}
 
 	@GetMapping("/{id}")
@@ -57,6 +69,13 @@ public class CategoriaResource {
 
 		PageModel<Categoria> pageModel = categoriaService.findAllOnLazyMode(pageRequestModel);
 		return ResponseEntity.ok(pageModel);
+	}
+	
+	@Secured({ "ROLE_ADMINISTRADORES" })
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deleteById(@PathVariable(name = "id") Long id) {
+		categoriaService.deleteById(id);
+		return ResponseEntity.ok().body(HttpStatus.OK);
 	}
 
 }
