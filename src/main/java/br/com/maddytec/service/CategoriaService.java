@@ -40,5 +40,9 @@ public class CategoriaService {
 
 		return new PageModel<>((int) page.getTotalElements(), page.getSize(), page.getTotalPages(), page.getContent());
 	}
+	
+	public void deleteById(Long id) {
+		categoriaRepository.deleteById(id);
+	}
 
 }
