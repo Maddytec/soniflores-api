@@ -9,7 +9,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.maddytec.domain.Grupo;
-import br.com.maddytec.domain.Usuario;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,12 +31,4 @@ public class UsuarioDTO {
 	@NotNull(message = "Required profile")
 	private List<Grupo> grupos= new ArrayList<>();
 
-	public Usuario converterToUser(UsuarioDTO usuarioDTO) {
-		return Usuario.builder()
-				.nome(usuarioDTO.getNome())
-				.email(usuarioDTO.getEmail())
-				.senha(usuarioDTO.getSenha())
-				.grupos(usuarioDTO.getGrupos())
-				.build();
-	}
 }
