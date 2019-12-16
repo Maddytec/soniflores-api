@@ -2,12 +2,15 @@ package br.com.maddytec.resource;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.maddytec.converter.EnderecoConverter;
 import br.com.maddytec.domain.Cliente;
+import br.com.maddytec.domain.Endereco;
 import br.com.maddytec.dto.ClienteDTO;
 import br.com.maddytec.model.PageModel;
 import br.com.maddytec.model.PageRequestModel;
@@ -33,19 +38,38 @@ public class ClienteResource {
 	@Autowired
 	private ClienteService clienteService;
 
+	@Autowired
+	private EnderecoConverter enderecoConverter;
+
 	@PostMapping
+	@Transactional
 	public ResponseEntity<Cliente> save(@RequestBody @Valid ClienteDTO clienteDTO) {
-		Cliente cliente = clienteDTO.converterToCliente(clienteDTO);
+		Cliente cliente = new Cliente();
+		BeanUtils.copyProperties(clienteDTO, cliente, "enderecos");
 		cliente = clienteService.save(cliente);
+
+		if (!CollectionUtils.isEmpty(clienteDTO.getEnderecos())) {
+			List<Endereco> enderecos = enderecoConverter.converterToEnderecosPorClienteDTO(clienteDTO, cliente);
+			cliente.setEnderecos(enderecos);
+		}
+
 		return ResponseEntity.status(HttpStatus.CREATED).body(cliente);
 	}
-	
+
 	@PutMapping("/{id}")
+	@Transactional
 	public ResponseEntity<Cliente> update(@PathVariable(name = "id") Long id,
 			@RequestBody @Valid ClienteDTO clienteDTO) {
-		Cliente cliente = clienteDTO.converterToCliente(clienteDTO);
-		cliente.setId(id);
+
+		Cliente cliente = clienteService.findById(id);
+		BeanUtils.copyProperties(clienteDTO, cliente, "enderecos", "id");
 		cliente = clienteService.save(cliente);
+
+		if (!CollectionUtils.isEmpty(clienteDTO.getEnderecos())) {
+			List<Endereco> enderecos = enderecoConverter.converterToEnderecosPorClienteDTO(clienteDTO, cliente);
+			cliente.setEnderecos(enderecos);
+		}
+		
 		return ResponseEntity.status(HttpStatus.OK).body(cliente);
 	}
 
@@ -70,7 +94,7 @@ public class ClienteResource {
 		PageModel<Cliente> pageModel = clienteService.findAllOnLazyMode(pageRequestModel);
 		return ResponseEntity.ok(pageModel);
 	}
-	
+
 	@Secured({ "ROLE_ADMINISTRADORES" })
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteById(@PathVariable(name = "id") Long id) {

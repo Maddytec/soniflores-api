@@ -71,7 +71,7 @@ public class Cliente implements Serializable {
 
 	@Builder.Default
 	@JsonManagedReference
-	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
 	private List<Endereco> enderecos = new ArrayList<>();
 
 }
