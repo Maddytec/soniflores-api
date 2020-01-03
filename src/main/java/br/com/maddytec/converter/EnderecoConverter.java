@@ -2,6 +2,10 @@ package br.com.maddytec.converter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -16,36 +20,22 @@ import br.com.maddytec.dto.EnderecoDTO;
 public class EnderecoConverter {
 
 	public List<Endereco> converterToEnderecosPorClienteDTO(ClienteDTO clienteDTO, Cliente cliente) {
+		Stream<Endereco> streamEntidade =  cliente.getEnderecos().stream();
 
-		List<Endereco> enderecos = null;
-		if (!CollectionUtils.isEmpty(cliente.getEnderecos())) {
-			enderecos = cliente.getEnderecos();
-		} else {
-			enderecos = new ArrayList<>();
-		}
-
-		Endereco endereco = null;
-
-		for (EnderecoDTO enderecoDTO : clienteDTO.getEnderecos()) {
-			Boolean enderecoExiste = Boolean.FALSE;
-			for (Endereco enderecoBanco : cliente.getEnderecos()) {
-				if (enderecoBanco.getId() == enderecoDTO.getId()) {
-					BeanUtils.copyProperties(enderecoDTO, enderecoBanco);
-					enderecoBanco.setCliente(cliente);
-					enderecoExiste = Boolean.TRUE;
-					break;
-				}
-
-			}
-
-			if (!enderecoExiste) {
-				endereco = new Endereco();
-				BeanUtils.copyProperties(enderecoDTO, endereco, "cliente");
+		return clienteDTO.getEnderecos().stream().map(dto -> {
+			Optional<Endereco> result = streamEntidade.filter(entidade -> entidade.getId() == dto.getId()).findAny();
+			if (result.isPresent()){
+				BeanUtils.copyProperties(dto, result.get());
+				result.get().setCliente(cliente);
+				return result.get();
+			} else {
+				Endereco endereco = new Endereco();
+				BeanUtils.copyProperties(dto, endereco, "cliente");
 				endereco.setCliente(cliente);
-				enderecos.add(endereco);
+				return endereco;
 			}
-		}
+		}	
+		) .collect(Collectors.toList());
 
-		return enderecos;
 	}
 }
