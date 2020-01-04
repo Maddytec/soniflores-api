@@ -15,20 +15,21 @@ import br.com.maddytec.dto.ClienteDTO;
 public class EnderecoConverter {
 
 	public List<Endereco> converterToEnderecosPorClienteDTO(ClienteDTO clienteDTO, Cliente cliente) {
-		return clienteDTO.getEnderecos().stream().map(dto -> {
-			Optional<Endereco> result = cliente.getEnderecos().stream().filter(entidade -> entidade.getId() == dto.getId()).findAny();
-			if (result.isPresent()){
-				BeanUtils.copyProperties(dto, result.get());
+		return clienteDTO.getEnderecos().stream().map(enderecoDto -> {
+			Optional<Endereco> result = cliente.getEnderecos().stream()
+					.filter(endereco -> endereco.getId().equals(enderecoDto.getId())).findAny();
+
+			if (result.isPresent()) {
+				BeanUtils.copyProperties(enderecoDto, result.get());
 				result.get().setCliente(cliente);
 				return result.get();
 			} else {
 				Endereco endereco = new Endereco();
-				BeanUtils.copyProperties(dto, endereco, "cliente");
+				BeanUtils.copyProperties(enderecoDto, endereco, "cliente");
 				endereco.setCliente(cliente);
 				return endereco;
 			}
-		}	
-		) .collect(Collectors.toList());
+		}).collect(Collectors.toList());
 
 	}
 }
