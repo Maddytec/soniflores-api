@@ -78,6 +78,12 @@ public class ClienteResource {
 		Cliente cliente = clienteService.findById(id);
 		return ResponseEntity.ok().body(cliente);
 	}
+	
+	@GetMapping("/email/{email}")
+	public ResponseEntity<Cliente> findByEmail(@PathVariable(name = "email") String email) {
+		Cliente cliente = clienteService.findByEmail(email);
+		return ResponseEntity.ok().body(cliente);
+	}
 
 	@GetMapping
 	public ResponseEntity<List<Cliente>> findAll() {

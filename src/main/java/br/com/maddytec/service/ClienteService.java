@@ -28,6 +28,11 @@ public class ClienteService {
 		Optional<Cliente> optional = clienteRepository.findById(id);
 		return optional.orElseThrow(() -> new NotFoundException("Não existe cliente com id: " + id));
 	}
+	
+	public Cliente findByEmail(String email) {
+		Optional<Cliente> optional = clienteRepository.findByEmail(email);
+		return optional.orElseThrow(() -> new NotFoundException("Não existe cliente com email: " + email));
+	}
 
 	public List<Cliente> findAll() {
 		List<Cliente> clientes = clienteRepository.findAll();
