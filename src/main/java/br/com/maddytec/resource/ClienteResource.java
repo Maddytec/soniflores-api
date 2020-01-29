@@ -67,6 +67,7 @@ public class ClienteResource {
 
 		if (!CollectionUtils.isEmpty(clienteDTO.getEnderecos())) {
 			List<Endereco> enderecos = enderecoConverter.converterToEnderecosPorClienteDTO(clienteDTO, cliente);
+			clienteService.removerAllEndereco(cliente);
 			cliente.setEnderecos(enderecos);
 		}
 		

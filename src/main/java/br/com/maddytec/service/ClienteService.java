@@ -2,6 +2,7 @@ package br.com.maddytec.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,16 +10,22 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import br.com.maddytec.domain.Cliente;
+import br.com.maddytec.domain.Endereco;
+import br.com.maddytec.dto.ClienteDTO;
 import br.com.maddytec.exception.NotFoundException;
 import br.com.maddytec.model.PageModel;
 import br.com.maddytec.model.PageRequestModel;
 import br.com.maddytec.repository.ClienteRepository;
+import br.com.maddytec.repository.EnderecoRepository;
 
 @Service
 public class ClienteService {
 
 	@Autowired
 	private ClienteRepository clienteRepository;
+
+	@Autowired
+	private EnderecoRepository enderecoRepository;
 
 	public Cliente save(Cliente cliente) {
 		return clienteRepository.save(cliente);
@@ -28,7 +35,7 @@ public class ClienteService {
 		Optional<Cliente> optional = clienteRepository.findById(id);
 		return optional.orElseThrow(() -> new NotFoundException("Não existe cliente com id: " + id));
 	}
-	
+
 	public Cliente findByEmail(String email) {
 		Optional<Cliente> optional = clienteRepository.findByEmail(email);
 		return optional.orElseThrow(() -> new NotFoundException("Não existe cliente com email: " + email));
@@ -45,9 +52,15 @@ public class ClienteService {
 
 		return new PageModel<>((int) page.getTotalElements(), page.getSize(), page.getTotalPages(), page.getContent());
 	}
-	
+
 	public void deleteById(Long id) {
 		clienteRepository.deleteById(id);
+	}
+
+	public void removerAllEndereco(Cliente cliente) {
+		if(cliente != null && cliente.getEnderecos() != null) {
+					enderecoRepository.deleteAll();
+				}
 	}
 
 }

@@ -41,7 +41,6 @@ public class Endereco implements Serializable {
 	@Column(nullable = false, length = 150)
 	private String logradouro;
 
-	@NotBlank
 	@Size(max = 20)
 	@Column(nullable = false, length = 20)
 	private String numero;
