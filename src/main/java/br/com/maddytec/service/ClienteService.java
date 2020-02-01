@@ -2,7 +2,6 @@ package br.com.maddytec.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,8 +9,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import br.com.maddytec.domain.Cliente;
-import br.com.maddytec.domain.Endereco;
-import br.com.maddytec.dto.ClienteDTO;
 import br.com.maddytec.exception.NotFoundException;
 import br.com.maddytec.model.PageModel;
 import br.com.maddytec.model.PageRequestModel;
@@ -58,9 +55,11 @@ public class ClienteService {
 	}
 
 	public void removerAllEndereco(Cliente cliente) {
-		if(cliente != null && cliente.getEnderecos() != null) {
-					enderecoRepository.deleteAll();
-				}
+		if (cliente != null && cliente.getEnderecos() != null) {
+			cliente.getEnderecos().forEach(endereco -> {
+				enderecoRepository.delete(endereco);
+			});
+		}
 	}
 
 }
